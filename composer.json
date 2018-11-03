@@ -1,0 +1,37 @@
+{
+    "name": "informaticauco/simplesamlphp-module-authchain",
+    "description": "AuthSource Chain Authentication",
+    "type": "simplesamlphp-module",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sergio Gómez",
+            "email": "sergio@uco.es"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "SimpleSAML\\Modules\\AuthChain\\": "lib"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\SimpleSAML\\Modules\\AuthChain\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=5.5.9",
+        "simplesamlphp/composer-module-installer": "^1.0"
+    },
+    "require-dev": {
+        "simplesamlphp/simplesamlphp": "^1.15",
+        "phpunit/phpunit": "^7.4",
+        "friendsofphp/php-cs-fixer": "^2.13",
+        "roave/security-advisories": "dev-master"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}
