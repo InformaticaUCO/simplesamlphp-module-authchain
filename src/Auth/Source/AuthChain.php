@@ -25,10 +25,15 @@ use function sprintf;
 class AuthChain extends UserPassBase
 {
     /**
-     * @var array $sources
+     * @var string[] $sources
      */
     private array $sources;
 
+
+    /**
+     * @param array<mixed> $info
+     * @param array<mixed> $config
+     */
     public function __construct(array $info, array $config)
     {
         parent::__construct($info, $config);
@@ -43,6 +48,10 @@ class AuthChain extends UserPassBase
         $this->sources = $config['sources'];
     }
 
+
+    /**
+     * @return array<mixed>
+     */
     protected function login(string $username, string $password): array
     {
         $lastError = false;

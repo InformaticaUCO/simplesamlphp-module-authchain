@@ -11,7 +11,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "SimpleSAML\\Module\\authchain\\": "src"
+            "SimpleSAML\\Module\\authchain\\": "src/"
         }
     },
     "autoload-dev": {
