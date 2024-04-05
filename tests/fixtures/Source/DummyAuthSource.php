@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the simplesamlphp-module-authchain.
  *
@@ -13,7 +15,9 @@
 
 namespace Tests\SimpleSAML\Modules\AuthChain\fixtures\Source;
 
-class DummyAuthSource extends \SimpleSAML_Auth_Source
+use SimpleSAML\Auth;
+
+class DummyAuthSource extends Auth\Source
 {
     public function authenticate(&$state)
     {

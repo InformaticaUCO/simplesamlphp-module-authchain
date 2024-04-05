@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the simplesamlphp-module-authchain.
  *
@@ -11,19 +13,19 @@
  * file that was distributed with this source code.
  */
 
-namespace Tests\SimpleSAML\Modules\AuthChain\Auth\Source;
+namespace Tests\SimpleSAML\Module\authchain\Auth\Source;
 
 use PHPUnit\Framework\TestCase;
-use SimpleSAML\Modules\AuthChain\Auth\Source\AuthChain;
+use SimpleSAML\{Configuration, Error};
+use SimpleSAML\Module\authchain\Auth\Source\AuthChain;
 
 class AuthChainTest extends TestCase
 {
     /**
-     * @test
      */
-    public function it_does_chained_login()
+    public function itDoeschainedLogin(): void
     {
-        \SimpleSAML_Configuration::setConfigDir(__DIR__.'/../../fixtures/config');
+        Configuration::setConfigDir(__DIR__ . '/../../fixtures/config');
 
         $authChain = new AuthChain([
             'AuthId' => 'chained',
@@ -40,11 +42,10 @@ class AuthChainTest extends TestCase
     }
 
     /**
-     * @test
      */
-    public function it_tries_all_auth_sources()
+    public function itTriesAllAuthSources(): void
     {
-        \SimpleSAML_Configuration::setConfigDir(__DIR__.'/../../fixtures/config');
+        Configuration::setConfigDir(__DIR__ . '/../../fixtures/config');
 
         $authChain = new AuthChain([
             'AuthId' => 'chained',
@@ -61,13 +62,10 @@ class AuthChainTest extends TestCase
     }
 
     /**
-     * @test
-     * @expectedException \SimpleSAML_Error_Error
-     * @expectedExceptionMessage WRONGUSERPASS
      */
-    public function it_launch_exception_if_all_auth_sources_fail()
+    public function itThrowsExceptionIfAllAuthSourcesFail(): void
     {
-        \SimpleSAML_Configuration::setConfigDir(__DIR__.'/../../fixtures/config');
+        Configuration::setConfigDir(__DIR__ . '/../../fixtures/config');
 
         $authChain = new AuthChain([
             'AuthId' => 'chained',
@@ -79,6 +77,9 @@ class AuthChainTest extends TestCase
             return $this->login($username, $password);
         };
         $bindedAuthChain = $login->bindTo($authChain, $authChain);
+
+        $this->expectException(Error\Error::class);
+        $this->expectExceptionMessage('WRONGUSERPASS');
         $bindedAuthChain('username', 'password');
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the simplesamlphp-module-authchain.
  *
@@ -13,7 +15,10 @@
 
 namespace Tests\SimpleSAML\Modules\AuthChain\fixtures\Source;
 
-class SuccessAuthSource extends \sspmod_core_Auth_UserPassBase
+use SimpleSAML\Error;
+use SimpleSAML\Module\core\Auth\UserPassBase;
+
+class SuccessAuthSource extends UserPassBase
 {
     protected function login($username, $password)
     {
@@ -21,6 +26,6 @@ class SuccessAuthSource extends \sspmod_core_Auth_UserPassBase
             'uid' => ['username'],
         ];
 
-        throw new \SimpleSAML_Error_Error('WRONGUSERPASS');
+        throw new Error\Error('WRONGUSERPASS');
     }
 }
