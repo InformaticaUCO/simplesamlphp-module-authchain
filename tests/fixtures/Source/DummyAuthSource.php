@@ -13,13 +13,16 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Tests\SimpleSAML\Modules\AuthChain\fixtures\Source;
+namespace Tests\SimpleSAML\Module\authchain\fixtures\Source;
 
 use SimpleSAML\Auth;
 
 class DummyAuthSource extends Auth\Source
 {
-    public function authenticate(&$state)
+    /**
+     * @param array<mixed> $state
+     */
+    public function authenticate(array &$state): void
     {
     }
 }

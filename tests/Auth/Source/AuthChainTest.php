@@ -23,7 +23,7 @@ class AuthChainTest extends TestCase
 {
     /**
      */
-    public function itDoeschainedLogin(): void
+    public function testItDoeschainedLogin(): void
     {
         Configuration::setConfigDir(__DIR__ . '/../../fixtures/config');
 
@@ -33,17 +33,20 @@ class AuthChainTest extends TestCase
             'sources' => ['dummy-as', 'success-as'],
         ]);
 
-        $login = function ($username, $password) {
-            return $this->login($username, $password);
+        $login = function ($authChain, $username, $password) {
+            return $authChain->login($username, $password);
         };
         $bindedAuthChain = $login->bindTo($authChain, $authChain);
 
-        $this->assertArraySubset(['uid' => ['username']], $bindedAuthChain('username', 'password'));
+        $result = $bindedAuthChain($authChain, 'username', 'password');
+        $this->assertArrayHasKey('uid', $result);
+        $this->assertSame([0 => 'username'], $result['uid']);
     }
+
 
     /**
      */
-    public function itTriesAllAuthSources(): void
+    public function testItTriesAllAuthSources(): void
     {
         Configuration::setConfigDir(__DIR__ . '/../../fixtures/config');
 
@@ -53,17 +56,20 @@ class AuthChainTest extends TestCase
             'sources' => ['failure-as', 'success-as'],
         ]);
 
-        $login = function ($username, $password) {
-            return $this->login($username, $password);
+        $login = function ($authChain, $username, $password) {
+            return $authChain->login($username, $password);
         };
         $bindedAuthChain = $login->bindTo($authChain, $authChain);
 
-        $this->assertArraySubset(['uid' => ['username']], $bindedAuthChain('username', 'password'));
+        $result = $bindedAuthChain($authChain, 'username', 'password');
+        $this->assertArrayHasKey('uid', $result);
+        $this->assertSame([0 => 'username'], $result['uid']);
     }
+
 
     /**
      */
-    public function itThrowsExceptionIfAllAuthSourcesFail(): void
+    public function testItThrowsExceptionIfAllAuthSourcesFail(): void
     {
         Configuration::setConfigDir(__DIR__ . '/../../fixtures/config');
 
@@ -73,13 +79,14 @@ class AuthChainTest extends TestCase
             'sources' => ['failure-as', 'failure-as'],
         ]);
 
-        $login = function ($username, $password) {
-            return $this->login($username, $password);
+        $login = function ($authChain, $username, $password) {
+            return $authChain->login($username, $password);
         };
         $bindedAuthChain = $login->bindTo($authChain, $authChain);
 
         $this->expectException(Error\Error::class);
         $this->expectExceptionMessage('WRONGUSERPASS');
-        $bindedAuthChain('username', 'password');
+
+        $bindedAuthChain($authChain, 'username', 'password');
     }
 }

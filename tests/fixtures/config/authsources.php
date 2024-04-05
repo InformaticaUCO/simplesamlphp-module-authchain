@@ -13,9 +13,9 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-use Tests\SimpleSAML\Modules\AuthChain\fixtures\Source\DummyAuthSource;
-use Tests\SimpleSAML\Modules\AuthChain\fixtures\Source\FailureAuthSource;
-use Tests\SimpleSAML\Modules\AuthChain\fixtures\Source\SuccessAuthSource;
+use Tests\SimpleSAML\Module\authchain\fixtures\Source\DummyAuthSource;
+use Tests\SimpleSAML\Module\authchain\fixtures\Source\FailureAuthSource;
+use Tests\SimpleSAML\Module\authchain\fixtures\Source\SuccessAuthSource;
 
 $config = [];
 
