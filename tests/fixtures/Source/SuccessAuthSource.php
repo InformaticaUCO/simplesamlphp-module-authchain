@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the simplesamlphp-module-authchain.
  *
@@ -11,16 +13,19 @@
  * file that was distributed with this source code.
  */
 
-namespace Tests\SimpleSAML\Modules\AuthChain\fixtures\Source;
+namespace Tests\SimpleSAML\Module\authchain\fixtures\Source;
 
-class SuccessAuthSource extends \sspmod_core_Auth_UserPassBase
+use SimpleSAML\Module\core\Auth\UserPassBase;
+
+class SuccessAuthSource extends UserPassBase
 {
-    protected function login($username, $password)
+    /**
+     * @return array<mixed>
+     */
+    protected function login(string $username, string $password): array
     {
         return [
             'uid' => ['username'],
         ];
-
-        throw new \SimpleSAML_Error_Error('WRONGUSERPASS');
     }
 }

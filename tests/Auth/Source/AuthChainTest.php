@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the simplesamlphp-module-authchain.
  *
@@ -11,19 +13,19 @@
  * file that was distributed with this source code.
  */
 
-namespace Tests\SimpleSAML\Modules\AuthChain\Auth\Source;
+namespace Tests\SimpleSAML\Module\authchain\Auth\Source;
 
 use PHPUnit\Framework\TestCase;
-use SimpleSAML\Modules\AuthChain\Auth\Source\AuthChain;
+use SimpleSAML\{Configuration, Error};
+use SimpleSAML\Module\authchain\Auth\Source\AuthChain;
 
 class AuthChainTest extends TestCase
 {
     /**
-     * @test
      */
-    public function it_does_chained_login()
+    public function testItDoeschainedLogin(): void
     {
-        \SimpleSAML_Configuration::setConfigDir(__DIR__.'/../../fixtures/config');
+        Configuration::setConfigDir(__DIR__ . '/../../fixtures/config');
 
         $authChain = new AuthChain([
             'AuthId' => 'chained',
@@ -31,20 +33,22 @@ class AuthChainTest extends TestCase
             'sources' => ['dummy-as', 'success-as'],
         ]);
 
-        $login = function ($username, $password) {
-            return $this->login($username, $password);
+        $login = function ($authChain, $username, $password) {
+            return $authChain->login($username, $password);
         };
         $bindedAuthChain = $login->bindTo($authChain, $authChain);
 
-        $this->assertArraySubset(['uid' => ['username']], $bindedAuthChain('username', 'password'));
+        $result = $bindedAuthChain($authChain, 'username', 'password');
+        $this->assertArrayHasKey('uid', $result);
+        $this->assertSame([0 => 'username'], $result['uid']);
     }
 
+
     /**
-     * @test
      */
-    public function it_tries_all_auth_sources()
+    public function testItTriesAllAuthSources(): void
     {
-        \SimpleSAML_Configuration::setConfigDir(__DIR__.'/../../fixtures/config');
+        Configuration::setConfigDir(__DIR__ . '/../../fixtures/config');
 
         $authChain = new AuthChain([
             'AuthId' => 'chained',
@@ -52,22 +56,22 @@ class AuthChainTest extends TestCase
             'sources' => ['failure-as', 'success-as'],
         ]);
 
-        $login = function ($username, $password) {
-            return $this->login($username, $password);
+        $login = function ($authChain, $username, $password) {
+            return $authChain->login($username, $password);
         };
         $bindedAuthChain = $login->bindTo($authChain, $authChain);
 
-        $this->assertArraySubset(['uid' => ['username']], $bindedAuthChain('username', 'password'));
+        $result = $bindedAuthChain($authChain, 'username', 'password');
+        $this->assertArrayHasKey('uid', $result);
+        $this->assertSame([0 => 'username'], $result['uid']);
     }
 
+
     /**
-     * @test
-     * @expectedException \SimpleSAML_Error_Error
-     * @expectedExceptionMessage WRONGUSERPASS
      */
-    public function it_launch_exception_if_all_auth_sources_fail()
+    public function testItThrowsExceptionIfAllAuthSourcesFail(): void
     {
-        \SimpleSAML_Configuration::setConfigDir(__DIR__.'/../../fixtures/config');
+        Configuration::setConfigDir(__DIR__ . '/../../fixtures/config');
 
         $authChain = new AuthChain([
             'AuthId' => 'chained',
@@ -75,10 +79,14 @@ class AuthChainTest extends TestCase
             'sources' => ['failure-as', 'failure-as'],
         ]);
 
-        $login = function ($username, $password) {
-            return $this->login($username, $password);
+        $login = function ($authChain, $username, $password) {
+            return $authChain->login($username, $password);
         };
         $bindedAuthChain = $login->bindTo($authChain, $authChain);
-        $bindedAuthChain('username', 'password');
+
+        $this->expectException(Error\Error::class);
+        $this->expectExceptionMessage('WRONGUSERPASS');
+
+        $bindedAuthChain($authChain, 'username', 'password');
     }
 }
