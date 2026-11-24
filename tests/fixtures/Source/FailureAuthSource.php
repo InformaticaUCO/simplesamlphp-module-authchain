@@ -13,10 +13,10 @@
 
 namespace Tests\SimpleSAML\Modules\AuthChain\fixtures\Source;
 
-class FailureAuthSource extends \sspmod_core_Auth_UserPassBase
+class FailureAuthSource extends \SimpleSAML\Module\core\Auth\UserPassBase
 {
     protected function login($username, $password)
     {
-        throw new \SimpleSAML_Error_Error('WRONGUSERPASS');
+        throw new \SimpleSAML\Error\Error('WRONGUSERPASS');
     }
 }

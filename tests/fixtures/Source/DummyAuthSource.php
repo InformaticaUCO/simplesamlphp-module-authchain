@@ -13,7 +13,7 @@
 
 namespace Tests\SimpleSAML\Modules\AuthChain\fixtures\Source;
 
-class DummyAuthSource extends \SimpleSAML_Auth_Source
+class DummyAuthSource extends \SimpleSAML\Auth\Source
 {
     public function authenticate(&$state)
     {

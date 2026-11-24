@@ -15,7 +15,7 @@ namespace SimpleSAML\Modules\AuthChain\Auth\Source;
 
 use Webmozart\Assert\Assert;
 
-class AuthChain extends \sspmod_core_Auth_UserPassBase
+class AuthChain extends \SimpleSAML\Module\core\Auth\UserPassBase
 {
     /**
      * @var array
@@ -27,7 +27,7 @@ class AuthChain extends \sspmod_core_Auth_UserPassBase
         parent::__construct($info, $config);
 
         if (!array_key_exists('sources', $config)) {
-            throw new \SimpleSAML_Error_Exception('The required "sources" config option was not found');
+            throw new \SimpleSAML\Error\Exception('The required "sources" config option was not found');
         }
 
         $this->sources = $config['sources'];
@@ -41,10 +41,10 @@ class AuthChain extends \sspmod_core_Auth_UserPassBase
         $lastError = false;
 
         foreach ($this->sources as $authId) {
-            $as = \SimpleSAML_Auth_Source::getById($authId);
+            $as = \SimpleSAML\Auth\Source::getById($authId);
 
             if (null === $as) {
-                throw new \SimpleSAML_Error_Exception("Invalid authentication source: $authId");
+                throw new \SimpleSAML\Error\Exception("Invalid authentication source: $authId");
             }
 
             if (!method_exists($as, 'login')) {
@@ -54,9 +54,9 @@ class AuthChain extends \sspmod_core_Auth_UserPassBase
 
             try {
                 return $as->login($username, $password);
-            } catch (\SimpleSAML_Error_AuthSource $e) {
+            } catch (\SimpleSAML\Error\AuthSource $e) {
                 \SimpleSAML\Logger::error("Could not connect to {$authId}, trying next");
-            } catch (\SimpleSAML_Error_Error $e) {
+            } catch (\SimpleSAML\Error\Error $e) {
                 if ('WRONGUSERPASS' === $e->getErrorCode()) {
                     \SimpleSAML\Logger::debug('Failed one source, trying next');
                 } else {
@@ -69,6 +69,6 @@ class AuthChain extends \sspmod_core_Auth_UserPassBase
             throw $lastError;
         }
 
-        throw new \SimpleSAML_Error_Error('WRONGUSERPASS');
+        throw new \SimpleSAML\Error\Error('WRONGUSERPASS');
     }
 }

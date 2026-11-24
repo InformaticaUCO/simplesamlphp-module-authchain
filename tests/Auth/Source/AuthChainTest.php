@@ -23,7 +23,7 @@ class AuthChainTest extends TestCase
      */
     public function it_does_chained_login()
     {
-        \SimpleSAML_Configuration::setConfigDir(__DIR__.'/../../fixtures/config');
+        \SimpleSAML\Configuration::setConfigDir(__DIR__.'/../../fixtures/config');
 
         $authChain = new AuthChain([
             'AuthId' => 'chained',
@@ -44,7 +44,7 @@ class AuthChainTest extends TestCase
      */
     public function it_tries_all_auth_sources()
     {
-        \SimpleSAML_Configuration::setConfigDir(__DIR__.'/../../fixtures/config');
+        \SimpleSAML\Configuration::setConfigDir(__DIR__.'/../../fixtures/config');
 
         $authChain = new AuthChain([
             'AuthId' => 'chained',
@@ -62,12 +62,12 @@ class AuthChainTest extends TestCase
 
     /**
      * @test
-     * @expectedException \SimpleSAML_Error_Error
+     * @expectedException \SimpleSAML\Error\Error
      * @expectedExceptionMessage WRONGUSERPASS
      */
     public function it_launch_exception_if_all_auth_sources_fail()
     {
-        \SimpleSAML_Configuration::setConfigDir(__DIR__.'/../../fixtures/config');
+        \SimpleSAML\Configuration::setConfigDir(__DIR__.'/../../fixtures/config');
 
         $authChain = new AuthChain([
             'AuthId' => 'chained',
